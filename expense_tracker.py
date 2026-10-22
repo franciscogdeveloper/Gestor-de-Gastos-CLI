@@ -49,6 +49,15 @@ def cmd_list(args):
         print(f"{expense['id']:<4}{expense['date']:<12}{expense['description']:<{width}}{amount:>14}")
 
 
+def cmd_summary(args):
+    total = expenses.total_expenses(args.month)
+    if args.month is None:
+        print(f"Total de gastos: ${total}")
+    else:
+        month_name = expenses.MONTHS[args.month - 1]
+        print(f"Total de gastos de {month_name}: ${total}")
+
+
 # Define los subcomandos, sus opciones y la función que ejecuta cada uno
 def build_parser():
     parser = argparse.ArgumentParser(prog="python expense_tracker.py", description="Gestor de gastos")
@@ -61,6 +70,13 @@ def build_parser():
 
     list_parser = subparsers.add_parser("list", help="Lista todos los gastos")
     list_parser.set_defaults(handler=cmd_list)
+
+    summary_parser = subparsers.add_parser("summary", help="Muestra el total de los gastos")
+    summary_parser.add_argument(
+        "--month", type=int, choices=range(1, 13), metavar="1-12",
+        help="Mes del año actual (1-12)",
+    )
+    summary_parser.set_defaults(handler=cmd_summary)
 
     return parser
 
