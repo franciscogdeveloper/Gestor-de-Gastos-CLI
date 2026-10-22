@@ -34,6 +34,11 @@ def cmd_add(args):
     print(f"Gasto agregado correctamente (ID: {expense['id']})")
 
 
+def cmd_update(args):
+    expense = expenses.update_expense(args.id, args.description, args.amount)
+    print(f"Gasto actualizado correctamente (ID: {expense['id']})")
+
+
 def cmd_list(args):
     expense_list = expenses.list_expenses()
     if not expense_list:
@@ -77,6 +82,12 @@ def build_parser():
         help="Mes del año actual (1-12)",
     )
     summary_parser.set_defaults(handler=cmd_summary)
+
+    update_parser = subparsers.add_parser("update", help="Actualiza un gasto")
+    update_parser.add_argument("--id", type=int, required=True, help="ID del gasto")
+    update_parser.add_argument("--description", help="Nueva descripción")
+    update_parser.add_argument("--amount", type=parse_amount, help="Nuevo monto")
+    update_parser.set_defaults(handler=cmd_update)
 
     return parser
 

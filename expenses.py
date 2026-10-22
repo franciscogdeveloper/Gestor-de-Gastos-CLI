@@ -63,3 +63,34 @@ def total_expenses(month=None):
         total += Decimal(expense["amount"])
 
     return total.quantize(CENTS)
+
+
+# Busca un gasto por id; si no existe, lanza ExpenseError
+def find_expense(expenses, expense_id):
+    expense = next((expense for expense in expenses if expense["id"] == expense_id), None)
+    if expense is None:
+        raise ExpenseError(f"No existe un gasto con ID {expense_id}.")
+    return expense
+
+
+# Cambia la descripción, el monto o ambos; al menos uno es obligatorio
+def update_expense(expense_id, description=None, amount=None):
+    if description is None and amount is None:
+        raise ExpenseError("Indica una nueva descripción o un nuevo monto.")
+
+    expenses = storage.load_expenses()
+    expense = find_expense(expenses, expense_id)
+
+    if description is not None:
+        description = description.strip()
+        if not description:
+            raise ExpenseError("La descripción no puede estar vacía.")
+        expense["description"] = description
+
+    if amount is not None:
+        if amount <= 0:
+            raise ExpenseError("El monto debe ser mayor que cero.")
+        expense["amount"] = str(amount.quantize(CENTS))
+
+    storage.save_expenses(expenses)
+    return expense
