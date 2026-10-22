@@ -1,0 +1,10 @@
+# Datos locales del usuario
+expenses.json
+*.tmp
+
+# Archivos generados por Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+.venv/
