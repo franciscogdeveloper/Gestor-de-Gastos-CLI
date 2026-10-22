@@ -34,6 +34,21 @@ def cmd_add(args):
     print(f"Gasto agregado correctamente (ID: {expense['id']})")
 
 
+def cmd_list(args):
+    expense_list = expenses.list_expenses()
+    if not expense_list:
+        print("No hay gastos registrados.")
+        return
+
+    # La columna de descripción se ajusta a la descripción más larga
+    width = max(len("Descripción"), *(len(expense["description"]) for expense in expense_list)) + 2
+
+    print(f"{'ID':<4}{'Fecha':<12}{'Descripción':<{width}}{'Monto':>14}")
+    for expense in expense_list:
+        amount = f"${expense['amount']}"
+        print(f"{expense['id']:<4}{expense['date']:<12}{expense['description']:<{width}}{amount:>14}")
+
+
 # Define los subcomandos, sus opciones y la función que ejecuta cada uno
 def build_parser():
     parser = argparse.ArgumentParser(prog="python expense_tracker.py", description="Gestor de gastos")
@@ -43,6 +58,9 @@ def build_parser():
     add_parser.add_argument("--description", required=True, help="Descripción del gasto")
     add_parser.add_argument("--amount", type=parse_amount, required=True, help="Monto del gasto")
     add_parser.set_defaults(handler=cmd_add)
+
+    list_parser = subparsers.add_parser("list", help="Lista todos los gastos")
+    list_parser.set_defaults(handler=cmd_list)
 
     return parser
 

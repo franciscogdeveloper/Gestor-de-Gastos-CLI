@@ -34,3 +34,8 @@ def add_expense(description, amount, expense_date=None):
     expenses.append(expense)
     storage.save_expenses(expenses)
     return expense
+
+
+# Devuelve todos los gastos
+def list_expenses():
+    return storage.load_expenses()
