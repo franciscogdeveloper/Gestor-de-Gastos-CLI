@@ -94,3 +94,13 @@ def update_expense(expense_id, description=None, amount=None):
 
     storage.save_expenses(expenses)
     return expense
+
+
+# Elimina un gasto por id y devuelve el gasto eliminado
+def delete_expense(expense_id):
+    expenses = storage.load_expenses()
+    expense = find_expense(expenses, expense_id)
+
+    expenses.remove(expense)
+    storage.save_expenses(expenses)
+    return expense

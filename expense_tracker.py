@@ -39,6 +39,11 @@ def cmd_update(args):
     print(f"Gasto actualizado correctamente (ID: {expense['id']})")
 
 
+def cmd_delete(args):
+    expense = expenses.delete_expense(args.id)
+    print(f"Gasto eliminado correctamente (ID: {expense['id']})")
+
+
 def cmd_list(args):
     expense_list = expenses.list_expenses()
     if not expense_list:
@@ -88,6 +93,10 @@ def build_parser():
     update_parser.add_argument("--description", help="Nueva descripción")
     update_parser.add_argument("--amount", type=parse_amount, help="Nuevo monto")
     update_parser.set_defaults(handler=cmd_update)
+
+    delete_parser = subparsers.add_parser("delete", help="Elimina un gasto")
+    delete_parser.add_argument("--id", type=int, required=True, help="ID del gasto")
+    delete_parser.set_defaults(handler=cmd_delete)
 
     return parser
 
